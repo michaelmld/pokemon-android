@@ -52,9 +52,6 @@ class FirstFragment : Fragment() {
             countMe(view)
         }
 
-        pokemonClient.getPokemon().subscribe { it ->
-            println(it.count)
-        }
     }
 
     private fun countMe(view: View) {

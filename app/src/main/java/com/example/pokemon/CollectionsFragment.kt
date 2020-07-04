@@ -20,6 +20,7 @@ class CollectionsFragment: Fragment() {
 
     // Use the 'by viewModels()' Kotlin property delegate
     // from the activity-ktx artifact
+    //https://stackoverflow.com/questions/54313453/how-to-instantiate-viewmodel-in-androidx
     val model: CollectionsViewModel by viewModels()
 
     override fun onCreateView(

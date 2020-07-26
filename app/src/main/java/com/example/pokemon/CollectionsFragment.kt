@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pokemon.databinding.FragmentCollectionsBinding
@@ -14,6 +15,7 @@ import com.example.pokemon.viewmodels.CollectionsViewModel
 import kotlin.random.Random
 import com.example.pokemon.models.Collection
 import com.example.service.PokemonClient
+import com.example.service.PokemonResult
 import javax.inject.Inject
 
 class CollectionsFragment: Fragment() {
@@ -34,7 +36,15 @@ class CollectionsFragment: Fragment() {
         model.load()
 
         val data = mutableListOf<Collection>(c1,c2,c3)
-        val collectionAdapter = CollectionAdapter(data, findNavController())
+
+
+        val collectionAdapter = CollectionAdapter(mutableListOf(), findNavController())
+
+        model.liveData.observe(viewLifecycleOwner, Observer {
+            println("observe changE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            collectionAdapter.data.addAll(it)
+            collectionAdapter.notifyDataSetChanged()
+        })
 
         return FragmentCollectionsBinding.inflate(inflater, container, false).apply {
             collectionRecyclerView.apply {
@@ -44,6 +54,7 @@ class CollectionsFragment: Fragment() {
             }
 
             addCollectionSubmitListener = View.OnClickListener {
+                println("yo i clicked!")
                 val randomInt = Random.nextInt(0, 100)
                 val randomCollection = Collection(
                     "id" + randomInt.toString(),

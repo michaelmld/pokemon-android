@@ -2,8 +2,11 @@ package com.example.pokemon.viewmodels
 
 import android.app.Application
 import android.net.UrlQuerySanitizer
+import androidx.lifecycle.MutableLiveData
 import com.example.service.PokemonClient
 import com.example.service.PokemonContainer
+import com.example.service.PokemonResult
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import java.net.URI
 import javax.inject.Inject
@@ -11,12 +14,16 @@ import javax.inject.Inject
 class CollectionsViewModel(application: Application) : CommonViewModel(application) {
 
     var text: String? = null
+    var results: MutableList<PokemonResult> = mutableListOf<PokemonResult>()
+    var liveData = MutableLiveData<List<PokemonResult>>()
+
 
     @Inject
     lateinit var pokemonClient: PokemonClient
 
     init {
         this.baseApplication.component.inject(this)
+        liveData.postValue(results)
     }
 
     fun load() {
@@ -46,9 +53,9 @@ class CollectionsViewModel(application: Application) : CommonViewModel(applicati
                     stream.onComplete()
                 }
             }
-        }.subscribe {
-            println("OUT SIDE SUBSCRIBE thread ========="+Thread.currentThread().name)
-            println(it)
+        }.subscribeOn(Schedulers.io()).subscribe {
+            results.addAll(it.results.filterNotNull())
+            liveData.postValue(results)
         }
 
         //If you don’t specify threading in RxJava (if you don’t specify subscribeOn, observeOn or both),

@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemon.models.Collection
+import com.example.service.PokemonResult
 
-class CollectionAdapter(private val data: List<Collection>, private val navController: NavController): RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder>() {
+class CollectionAdapter(var data: MutableList<PokemonResult>, private val navController: NavController): RecyclerView.Adapter<CollectionAdapter.CollectionViewHolder>() {
 
     class CollectionViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         var textView: TextView
